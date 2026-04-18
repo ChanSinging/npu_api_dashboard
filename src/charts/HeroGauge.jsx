@@ -31,9 +31,6 @@ export default function HeroGauge({ rate, rawRate }) {
       <text x={cx} y={cy + 6} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="12" fill="var(--fg-3)">
         % 加权对齐率
       </text>
-      <g transform={`translate(${cx} ${cy})`}>
-        <circle r="4" fill="var(--fg)" />
-      </g>
     </svg>
   );
 }

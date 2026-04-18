@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { APIS, REPOS, TREND_30D, DIMENSIONS, overallAlignment, weightedAlignment } from '../data';
 import { HeroGauge } from '../charts';
 
-export default function HeroSection({ filtered }) {
+export default function HeroSection({ filtered = [] }) {
   const ov = useMemo(() => overallAlignment(filtered), [filtered]);
   const wv = useMemo(() => weightedAlignment(filtered), [filtered]);
 
@@ -13,7 +13,8 @@ export default function HeroSection({ filtered }) {
   const untestedCount = filtered.reduce((s, a) => s + DIMENSIONS.filter(d => a.dims[d.key] === 'untested').length, 0);
   const l0            = filtered.filter(a => a.level === 'L0');
   const l0Aligned     = l0.filter(a => DIMENSIONS.every(d => a.dims[d.key] === 'aligned' || a.dims[d.key] === 'reviewed')).length;
-  const denominator   = fixingCount + reviewedCount + untestedCount || 1;
+  const totalDims     = filtered.length * DIMENSIONS.length || 1;
+  const change30d     = (wv.rate - TREND_30D[0].weighted) * 100;
 
   return (
     <section className="hero-solo">
@@ -23,7 +24,7 @@ export default function HeroSection({ filtered }) {
           <div className="hero-gauge-legend">
             <span><span className="sw" style={{ background: 'var(--npu)' }} />加权 {(wv.rate * 100).toFixed(1)}%</span>
             <span><span className="sw" style={{ background: 'var(--fg-3)', border: '1px dashed var(--fg-3)' }} />平均 {(ov.rate * 100).toFixed(1)}%</span>
-            <span><span className="sw" style={{ background: 'var(--s-aligned)' }} />30d +{((wv.rate - TREND_30D[0].weighted) * 100).toFixed(1)}pp</span>
+            <span><span className="sw" style={{ background: 'var(--s-aligned)' }} />30d {change30d >= 0 ? '+' : ''}{change30d.toFixed(1)}pp</span>
           </div>
         </div>
         <div className="hero-main">
@@ -40,27 +41,27 @@ export default function HeroSection({ filtered }) {
             <div className="kpi">
               <div className="kpi-k">L0 就绪</div>
               <div className="kpi-v">{l0Aligned}<span className="dim mono" style={{ fontSize: 14 }}>/{l0.length}</span></div>
-              <div className="kpi-bar"><div style={{ width: `${l0Aligned / (l0.length || 1) * 100}%`, background: 'var(--npu)' }} /></div>
+              <div className="kpi-bar"><div style={{ width: `${l0Aligned / (l0.length || 1) * 100}%`, background: '#d4871a' }} /></div>
             </div>
             <div className="kpi">
               <div className="kpi-k">已评审接受</div>
               <div className="kpi-v" style={{ color: 'var(--s-reviewed)' }}>{reviewedCount}</div>
-              <div className="kpi-bar"><div style={{ width: `${reviewedCount / denominator * 100}%`, background: 'var(--s-reviewed)' }} /></div>
+              <div className="kpi-bar"><div style={{ width: `${reviewedCount / totalDims * 100}%`, background: '#8fa65c' }} /></div>
             </div>
             <div className="kpi">
               <div className="kpi-k">待修复差异</div>
               <div className="kpi-v" style={{ color: 'var(--s-fixing)' }}>{fixingCount}</div>
-              <div className="kpi-bar"><div style={{ width: `${fixingCount / denominator * 100}%`, background: 'var(--s-fixing)' }} /></div>
+              <div className="kpi-bar"><div style={{ width: `${fixingCount / totalDims * 100}%`, background: '#c94a4a' }} /></div>
             </div>
             <div className="kpi">
               <div className="kpi-k">未测试</div>
               <div className="kpi-v dim">{untestedCount}</div>
-              <div className="kpi-bar"><div style={{ width: `${untestedCount / denominator * 100}%`, background: 'var(--fg-4)' }} /></div>
+              <div className="kpi-bar"><div style={{ width: `${untestedCount / totalDims * 100}%`, background: '#999' }} /></div>
             </div>
             <div className="kpi">
               <div className="kpi-k">用例通过</div>
               <div className="kpi-v">{(passCases / (totalCases || 1) * 100).toFixed(1)}<span style={{ fontSize: 12, color: 'var(--fg-3)' }}>%</span></div>
-              <div className="kpi-bar"><div style={{ width: `${passCases / (totalCases || 1) * 100}%`, background: 'var(--s-aligned)' }} /></div>
+              <div className="kpi-bar"><div style={{ width: `${passCases / (totalCases || 1) * 100}%`, background: '#5a9a6e' }} /></div>
             </div>
           </div>
         </div>

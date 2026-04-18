@@ -1,5 +1,5 @@
 import { DIMENSIONS, STATUS_META, TREND_30D, tally } from '../data';
-import { MiniRadial, Spark, ModuleDimHeat } from '../charts';
+import { MiniRadial, Spark } from '../charts';
 
 const DIM_COLORS = ['var(--npu)', 'oklch(0.6 0.18 280)', 'oklch(0.6 0.15 195)', 'oklch(0.6 0.16 340)'];
 const DIM_HINTS  = {
@@ -24,7 +24,7 @@ export default function DimSection({ filtered }) {
           <span className="title">四维度 深度拆解</span>
           <span className="sub">功能 / 精度 / 内存 / 确定性 · 每维度独立运行、独立打分</span>
         </div>
-        <span className="right mono">模块分布 · 状态分布 · 趋势</span>
+        <span className="right mono">状态分布 · 趋势</span>
       </div>
       <section className="dim-grid">
         {dimAgg.map(({ d, t, tot, rate, rawRate }, di) => {
@@ -66,13 +66,13 @@ export default function DimSection({ filtered }) {
                   ))}
                 </div>
               </div>
-              <div className="dim-modlist">
-                <div className="dim-modlist-h">模块对齐分布</div>
-                <ModuleDimHeat dimKey={d.key} apis={filtered} />
-              </div>
               <div className="dim-trend">
-                <Spark data={trend} color={dimColor} height={24} />
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--fg-4)' }}>
+                <div className="dim-trend-head">
+                  <span className="dim-trend-label">30 天趋势</span>
+                  <span className="dim-trend-val" style={{ color: dimColor }}>{(trend[29] * 100).toFixed(1)}%</span>
+                </div>
+                <Spark data={trend} color={dimColor} height={40} showArea />
+                <div className="dim-trend-axis">
                   <span>30d 前</span><span>今天</span>
                 </div>
               </div>

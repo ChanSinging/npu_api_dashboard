@@ -48,8 +48,8 @@
 .kpi    { background: var(--panel); padding: 10px 12px; }
 .kpi-k  { font-family: var(--font-mono); font-size: 10px; color: var(--fg-3); text-transform: uppercase; letter-spacing: 0.04em; }
 .kpi-v  { font-family: var(--font-mono); font-size: 22px; font-weight: 500; color: var(--fg); margin-top: 2px; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
-.kpi-bar     { height: 3px; background: var(--bg-2); margin-top: 6px; }
-.kpi-bar > div { height: 100%; }
+.kpi-bar     { display: block; height: 3px; background: var(--bg-2); margin-top: 6px; border-radius: 1px; overflow: hidden; }
+.kpi-bar > div { display: block; height: 100%; border-radius: 1px; transition: width 0.3s ease; }
 
 /* ── Dimension grid ── */
 .dim-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line-soft); border-bottom: 1px solid var(--line); }
@@ -67,5 +67,8 @@
 .dim-stack > span > em { font-family: var(--font-mono); font-size: 9.5px; color: white; font-style: normal; font-weight: 500; mix-blend-mode: difference; }
 .dim-stack-legend { display: flex; justify-content: space-between; gap: 4px; margin-top: 4px; font-family: var(--font-mono); font-size: 9.5px; color: var(--fg-3); }
 .dim-stack-legend .d { display: inline-block; width: 7px; height: 7px; margin-right: 3px; vertical-align: 0; border-radius: 1px; }
-.dim-modlist-h { font-family: var(--font-mono); font-size: 9.5px; color: var(--fg-3); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 5px; }
-.dim-trend { border-top: 1px dashed var(--line-soft); padding-top: 8px; }
+.dim-trend { border-top: 1px dashed var(--line-soft); padding-top: 10px; }
+.dim-trend-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+.dim-trend-label { font-family: var(--font-mono); font-size: 10px; color: var(--fg-3); text-transform: uppercase; letter-spacing: 0.04em; }
+.dim-trend-val { font-family: var(--font-mono); font-size: 13px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.dim-trend-axis { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 9px; color: var(--fg-4); margin-top: 4px; }
