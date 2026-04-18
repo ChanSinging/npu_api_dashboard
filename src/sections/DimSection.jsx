@@ -1,0 +1,85 @@
+import { DIMENSIONS, STATUS_META, TREND_30D, tally } from '../data';
+import { MiniRadial, Spark, ModuleDimHeat } from '../charts';
+
+const DIM_COLORS = ['var(--npu)', 'oklch(0.6 0.18 280)', 'oklch(0.6 0.15 195)', 'oklch(0.6 0.16 340)'];
+const DIM_HINTS  = {
+  func: '输出 shape/dtype/语义与 PyTorch 参考一致',
+  prec: 'atol≤1e-5, rtol≤1e-4 对齐；默认 fp32/fp16/bf16',
+  mem:  '峰值内存 ≤ 1.1× 参考 · 无内存泄漏',
+  det:  '相同输入 ×10 次运行完全一致',
+};
+
+export default function DimSection({ filtered }) {
+  const dimAgg = DIMENSIONS.map(d => {
+    const t   = tally(filtered, d.key);
+    const tot = Object.values(t).reduce((a, b) => a + b, 0);
+    return { d, t, tot, rate: (t.aligned + t.reviewed) / tot, rawRate: t.aligned / tot };
+  });
+
+  return (
+    <>
+      <div className="sec-head">
+        <span className="idx">§1</span>
+        <div>
+          <span className="title">四维度 深度拆解</span>
+          <span className="sub">功能 / 精度 / 内存 / 确定性 · 每维度独立运行、独立打分</span>
+        </div>
+        <span className="right mono">模块分布 · 状态分布 · 趋势</span>
+      </div>
+      <section className="dim-grid">
+        {dimAgg.map(({ d, t, tot, rate, rawRate }, di) => {
+          const dimColor = DIM_COLORS[di];
+          const trend = TREND_30D.map((x, i) => x.rate + (di - 1.5) * 0.04 + Math.sin(i * 0.3 + di) * 0.02);
+          return (
+            <div className="dim-card" key={d.key}>
+              <div className="dim-card-head">
+                <div className="dim-letter-big" style={{ background: dimColor }}>{d.letter}</div>
+                <div style={{ flex: 1 }}>
+                  <div className="dim-name">{d.name}</div>
+                  <div className="dim-hint">{DIM_HINTS[d.key]}</div>
+                </div>
+              </div>
+              <div className="dim-metric">
+                <MiniRadial rate={rate} size={64} color={dimColor} />
+                <div style={{ flex: 1 }}>
+                  <div className="dim-big">{(rate * 100).toFixed(1)}<span className="dim-unit">%</span></div>
+                  <div className="dim-sub">
+                    <span>严格: {(rawRate * 100).toFixed(1)}%</span>
+                    <span className="dim" style={{ margin: '0 6px' }}>·</span>
+                    <span style={{ color: trend[29] > trend[0] ? 'var(--s-aligned)' : 'var(--s-fixing)' }}>
+                      {trend[29] > trend[0] ? '↑' : '↓'} {Math.abs((trend[29] - trend[0]) * 100).toFixed(1)}pp / 30d
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="dim-stack-wrap">
+                <div className="dim-stack">
+                  {['aligned', 'reviewed', 'fixing', 'unsupported', 'untested'].map(k => (
+                    <span key={k} style={{ width: `${t[k] / tot * 100}%`, background: `var(--s-${k})` }} title={`${STATUS_META[k].label} ${t[k]}`}>
+                      {t[k] / tot > 0.08 && <em>{t[k]}</em>}
+                    </span>
+                  ))}
+                </div>
+                <div className="dim-stack-legend">
+                  {['aligned', 'reviewed', 'fixing', 'unsupported', 'untested'].map(k => (
+                    <span key={k}><span className="d" style={{ background: `var(--s-${k})`, ...(k === 'untested' ? { border: '1px solid var(--line)' } : {}) }} />{t[k]}</span>
+                  ))}
+                </div>
+              </div>
+              <div className="dim-modlist">
+                <div className="dim-modlist-h">模块对齐分布</div>
+                <ModuleDimHeat dimKey={d.key} apis={filtered} />
+              </div>
+              <div className="dim-trend">
+                <Spark data={trend} color={dimColor} height={24} />
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--fg-4)' }}>
+                  <span>30d 前</span><span>今天</span>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </section>
+    </>
+  );
+}
