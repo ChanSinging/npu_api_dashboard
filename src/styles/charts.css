@@ -1,16 +1,6 @@
 /* ── Pixel Matrix ── */
 .pxmat-legend { display: flex; gap: 14px; font-family: var(--font-mono); font-size: 10.5px; color: var(--fg-3); align-items: center; }
 .pxmat-legend .swatch { width: 10px; height: 10px; display: inline-block; border-radius: 1px; margin-right: 5px; vertical-align: -1px; }
-.pxmat-quad {
-  display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;
-  gap: 0.5px; background: var(--panel); cursor: pointer; position: relative; flex-shrink: 0;
-}
-.pxmat-quad:hover { outline: 1.5px solid var(--fg); outline-offset: 1px; z-index: 2; }
-.pxmat-quad span { background: var(--s-untested); }
-.pxmat-quad span.aligned     { background: var(--s-aligned); }
-.pxmat-quad span.reviewed    { background: var(--s-reviewed); }
-.pxmat-quad span.fixing      { background: var(--s-fixing); }
-.pxmat-quad span.unsupported { background: var(--s-unsupported); }
 
 /* ── Hi-impact table ── */
 .htab { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 11.5px; }

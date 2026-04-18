@@ -5,8 +5,8 @@ import { overallAlignment } from './metrics';
 
 export const TREND_30D = (() => {
   const arr = [];
-  const startRate = 0.562;
   const endRate = overallAlignment(APIS).rate;
+  const startRate = Math.max(0.1, endRate - 0.08);
   for (let i = 0; i < 30; i++) {
     const t = i / 29;
     const base = startRate + (endRate - startRate) * (t * t * (3 - 2 * t));
