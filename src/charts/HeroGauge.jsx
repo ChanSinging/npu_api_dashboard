@@ -1,36 +1,56 @@
-export default function HeroGauge({ rate, rawRate }) {
-  const size = 260, cx = size / 2, cy = size / 2 + 14, r = 96, tk = 14;
-  const arcPath = (startDeg, endDeg, rr) => {
-    const s = (startDeg - 90) * Math.PI / 180;
-    const e = (endDeg - 90) * Math.PI / 180;
-    const large = Math.abs(endDeg - startDeg) > 180 ? 1 : 0;
-    return `M ${cx + rr * Math.cos(s)} ${cy + rr * Math.sin(s)} A ${rr} ${rr} 0 ${large} 1 ${cx + rr * Math.cos(e)} ${cy + rr * Math.sin(e)}`;
+export default function HeroGauge({ stats, label }) {
+  const size = 77, cx = size / 2, cy = size / 2, r = 29, tk = 6;
+  const startDeg = 210, endDeg = 510, totalDeg = endDeg - startDeg;
+  const { total, aligned, partial, fixing, untested } = stats;
+  const rate = (aligned + partial) / total;
+
+  const arcPath = (s, e, rr) => {
+    const sa = (s - 90) * Math.PI / 180;
+    const ea = (e - 90) * Math.PI / 180;
+    const large = Math.abs(e - s) > 180 ? 1 : 0;
+    return `M ${cx + rr * Math.cos(sa)} ${cy + rr * Math.sin(sa)} A ${rr} ${rr} 0 ${large} 1 ${cx + rr * Math.cos(ea)} ${cy + rr * Math.sin(ea)}`;
   };
-  const fillDeg    = -180 + rate    * 180;
-  const rawFillDeg = -180 + rawRate * 180;
+
+  const segments = [
+    { val: aligned, color: 'var(--s-aligned)' },
+    { val: partial, color: 'var(--s-reviewed)' },
+    { val: fixing, color: 'var(--s-fixing)' },
+    { val: untested, color: 'var(--s-untested)' },
+  ];
+
+  let curDeg = startDeg;
+  const segPaths = segments.map((seg, i) => {
+    if (seg.val === 0) return null;
+    const segDeg = (seg.val / total) * totalDeg;
+    const path = arcPath(curDeg, curDeg + segDeg, r);
+    curDeg += segDeg;
+    return { path, color: seg.color, key: i };
+  });
+
   return (
-    <svg viewBox={`0 0 ${size} ${size * 0.7}`} style={{ width: '100%', maxWidth: 360, height: 'auto' }}>
-      <path d={arcPath(-180, 0, r)} fill="none" stroke="var(--bg-2)" strokeWidth={tk} strokeLinecap="round" />
-      <path d={arcPath(-180, rawFillDeg, r - tk - 3)} fill="none" stroke="var(--fg-3)" strokeWidth="2" strokeDasharray="2 2" />
-      <path d={arcPath(-180, fillDeg, r)} fill="none" stroke="var(--npu)" strokeWidth={tk} strokeLinecap="round" />
-      {Array.from({ length: 11 }).map((_, i) => {
-        const deg = -180 + i * 18;
-        const a = (deg - 90) * Math.PI / 180;
-        const r1 = r + tk / 2 + 2, r2 = r + tk / 2 + (i % 5 === 0 ? 8 : 4);
-        return <line key={i} x1={cx + r1 * Math.cos(a)} y1={cy + r1 * Math.sin(a)} x2={cx + r2 * Math.cos(a)} y2={cy + r2 * Math.sin(a)} stroke="var(--line-hard)" strokeWidth="0.8" />;
-      })}
-      {[0, 25, 50, 75, 100].map(v => {
-        const deg = -180 + (v / 100) * 180;
-        const a = (deg - 90) * Math.PI / 180;
-        const rr = r + tk / 2 + 18;
-        return <text key={v} x={cx + rr * Math.cos(a)} y={cy + rr * Math.sin(a) + 3} fontFamily="var(--font-mono)" fontSize="9" fill="var(--fg-3)" textAnchor="middle">{v}</text>;
-      })}
-      <text x={cx} y={cy - 14} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="54" fontWeight="500" fill="var(--fg)" style={{ letterSpacing: '-0.04em' }}>
-        {(rate * 100).toFixed(1)}
-      </text>
-      <text x={cx} y={cy + 6} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="12" fill="var(--fg-3)">
-        % 加权对齐率
-      </text>
-    </svg>
+    <div style={{ textAlign: 'center' }}>
+      <svg viewBox={`0 0 ${size} ${size}`} style={{ width: '70%', height: 'auto' }}>
+        <path d={arcPath(startDeg, endDeg, r)} fill="none" stroke="var(--bg-2)" strokeWidth={tk} strokeLinecap="butt" />
+        {segPaths.filter(Boolean).map(s => (
+          <path key={s.key} d={s.path} fill="none" stroke={s.color} strokeWidth={tk} strokeLinecap="butt" />
+        ))}
+        <text x={cx} y={cy + 4} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="12" fontWeight="500" fill="var(--fg)" style={{ letterSpacing: '-0.03em' }}>
+          {(rate * 100).toFixed(2)}%
+        </text>
+        <text x={cx} y={cy + 12} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="6" fill="var(--fg-3)">
+          {label}
+        </text>
+      </svg>
+      <div className="hero-ring-detail">
+        <span style={{ color: 'var(--s-aligned)' }}>{aligned}</span>
+        <span className="dim">·</span>
+        <span style={{ color: 'var(--s-reviewed)' }}>{partial}</span>
+        <span className="dim">·</span>
+        <span style={{ color: 'var(--s-fixing)' }}>{fixing}</span>
+        <span className="dim">·</span>
+        <span style={{ color: 'var(--fg-4)' }}>{untested}</span>
+        <span className="dim" style={{ marginLeft: 2 }}>/ {total}</span>
+      </div>
+    </div>
   );
 }

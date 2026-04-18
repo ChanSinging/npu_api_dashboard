@@ -34,10 +34,15 @@
     repeating-linear-gradient(0deg, transparent 0 23px, var(--line-soft) 23px 24px);
   pointer-events: none; opacity: 0.6;
 }
-.hero-solo-grid { display: grid; grid-template-columns: 360px 1fr; gap: 40px; align-items: center; position: relative; }
-.hero-gauge { padding: 8px; }
-.hero-gauge-legend { display: flex; gap: 16px; justify-content: center; margin-top: 8px; font-family: var(--font-mono); font-size: 10.5px; color: var(--fg-3); }
-.hero-gauge-legend .sw { display: inline-block; width: 10px; height: 10px; margin-right: 5px; vertical-align: -1px; border-radius: 2px; }
+.hero-solo-grid { position: relative; }
+.hero-rings-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding: 24px 28px 8px; }
+.hero-ring-footer { display: flex; gap: 24px; justify-content: center; align-items: center; padding: 0 28px 12px; }
+.hero-ring-label { font-family: var(--font-mono); text-align: center; }
+.hero-ring-detail { display: flex; gap: 3px; justify-content: center; font-family: var(--font-mono); font-size: 6.5px; color: var(--fg-4); margin-top: 2px; }
+.hero-ring-legend { display: flex; gap: 10px; font-family: var(--font-mono); font-size: 10px; color: var(--fg-3); }
+.hero-ring-legend .sw { display: inline-block; width: 8px; height: 8px; margin-right: 3px; vertical-align: -1px; border-radius: 1px; }
+.hero-ring-trend { font-family: var(--font-mono); font-size: 10.5px; color: var(--fg-3); }
+.hero-ring-trend .sw { display: inline-block; width: 10px; height: 10px; margin-right: 5px; vertical-align: -1px; border-radius: 2px; }
 .hero-main    { padding-right: 20px; }
 .hero-eyebrow { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
 .hero-h1      { font-size: 36px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.1; margin: 0 0 10px; color: var(--fg); font-family: var(--font-serif, Georgia, serif); }
