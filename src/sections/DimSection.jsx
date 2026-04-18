@@ -6,8 +6,8 @@ import { colors } from '../components/EChart';
 const DIM_COLORS = [colors.npu, '#7a5ac8', '#3a9aaa', '#c85a8a'];
 const DIM_HINTS  = {
   func: '输出 shape/dtype/语义与 PyTorch 参考一致',
-  prec: 'atol≤1e-5, rtol≤1e-4 对齐；默认 fp32/fp16/bf16',
-  mem:  '峰值内存 ≤ 1.1× 参考 · 无内存泄漏',
+  prec: '四类精度标准：通信原语规约类 · 通信原语二进制一致 · 直调 API · 组合类 API',
+  mem:  '无内存泄漏 · 三类内存标准：驱动总内存 · 框架持有总内存 · 最大激活内存',
   det:  '相同输入 ×10 次运行完全一致',
 };
 
@@ -48,7 +48,7 @@ export default function DimSection({ filtered }) {
         <span className="idx">§1</span>
         <div>
           <span className="title">四维度 深度拆解</span>
-          <span className="sub">功能 / 精度 / 内存 / 确定性 · 每维度独立运行、独立打分</span>
+          <span className="sub">功能 / 精度 / 内存 / 确定性 </span>
         </div>
         <span className="right mono">状态分布 · 趋势</span>
       </div>

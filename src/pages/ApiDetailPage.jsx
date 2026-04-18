@@ -204,12 +204,11 @@ export default function ApiDetailPage() {
           </Card>
           <Card variant="borderless" styles={{ body: { padding: '14px 18px' } }} style={{ borderRadius: 0 }}>
             <div className="mono dim" style={{ fontSize: 9.5, textTransform: 'uppercase', letterSpacing: '0.06em' }}>总体对齐</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 4 }}>
-              <MiniRadial rate={overallRate} size={28} color={colors.npu} />
+            <div style={{ marginTop: 4 }}>
               <span className="mono" style={{ fontSize: 14, fontWeight: 500, color: colors.fg }}>
                 {(overallRate * 100).toFixed(0)}<span style={{ fontSize: 10, color: colors.fg3 }}>%</span>
               </span>
-              <span className="mono dim" style={{ fontSize: 10 }}>({alignedDims}/{DIMENSIONS.length})</span>
+              <span className="mono dim" style={{ fontSize: 10, marginLeft: 6 }}>({alignedDims}/{DIMENSIONS.length})</span>
             </div>
           </Card>
           <Card variant="borderless" styles={{ body: { padding: '14px 18px' } }} style={{ borderRadius: 0 }}>

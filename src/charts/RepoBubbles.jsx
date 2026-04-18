@@ -22,7 +22,7 @@ export default function RepoBubbles({ repos, onFocus }) {
             bordered
             style={{ cursor: 'pointer', position: 'relative', overflow: 'hidden' }}
             bodyStyle={{ padding: '12px' }}
-            onClick={() => onFocus && onFocus(r)}
+            onClick={() => window.open(`https://github.com/${r.name}`, '_blank')}
           >
             <div style={{ position: 'absolute', top: 0, left: 0, height: 3, width: `${r.rate * 100}%`, background: rateColor }} />
             <Space align="center" style={{ marginTop: 4 }}>
