@@ -22,9 +22,38 @@
 .htab th.num, .htab td.num { text-align: right; font-variant-numeric: tabular-nums; }
 .htab td { padding: 5px 8px; border-bottom: 1px solid var(--line-soft); color: var(--fg-2); vertical-align: middle; }
 .htab tr:hover td { background: var(--bg-1); color: var(--fg); cursor: pointer; }
+.htab tr:focus-visible td { background: var(--bg-1); color: var(--fg); outline: 1px solid var(--npu); outline-offset: -1px; }
 .htab td.api { color: var(--fg); white-space: nowrap; max-width: 220px; overflow: hidden; text-overflow: ellipsis; }
 
 /* ── Repo coverage ── */
+.repo-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--line);
+  font-family: var(--font-mono);
+}
+.repo-summary-item {
+  min-width: 0;
+}
+.repo-summary-label {
+  font-size: 10px;
+  color: var(--fg-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.repo-summary-value {
+  margin-top: 2px;
+  font-size: 15px;
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+.repo-summary-value.good { color: var(--s-aligned); }
+.repo-summary-value.bad { color: var(--s-fixing); }
+
 .repo-list { display: flex; flex-direction: column; }
 .repo-row {
   display: grid; grid-template-columns: 1fr 50px 1fr 50px;
@@ -64,6 +93,10 @@
 .diff-row.del .new { color: var(--s-fixing); }
 .diff-row .usr { color: var(--fg-3); font-size: 10px; }
 
+.trend-card-feed .diff {
+  max-height: 354px;
+}
+
 /* ── Module bars ── */
 .module-list { display: flex; flex-direction: column; gap: 6px; }
 .module-row  { display: grid; grid-template-columns: 130px 1fr 42px 52px; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 11px; }
@@ -72,3 +105,49 @@
 .stack span { display: block; height: 100%; }
 .module-row .count { color: var(--fg-4); text-align: right; font-size: 10px; }
 .module-row .rate  { color: var(--fg); text-align: right; font-variant-numeric: tabular-nums; font-weight: 500; }
+
+@media (max-width: 760px) {
+  .pxmat-legend {
+    grid-column: 1 / -1;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+  }
+
+  .matrix-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .matrix-stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .matrix-toolbar,
+  .matrix-body {
+    padding: 12px;
+  }
+
+  .matrix-stat-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .matrix-controls button {
+    flex: 1 1 auto;
+    justify-content: space-between;
+  }
+
+  .pxmat-row {
+    grid-template-columns: minmax(78px, 28vw) minmax(0, 1fr) 42px;
+    gap: 7px;
+  }
+
+  .pxmat-module {
+    font-size: 10px;
+    padding-right: 4px;
+  }
+
+  .pxmat-rate {
+    font-size: 10px;
+  }
+}

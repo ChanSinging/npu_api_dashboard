@@ -4,15 +4,22 @@ import { DualTrend, VelocityBars, DiffFeed } from '../charts';
 
 export default function TrendSection() {
   const lastWeek = VELOCITY[VELOCITY.length - 1];
+  const current = TREND_30D[TREND_30D.length - 1];
+  const previous = TREND_30D[0];
+  const gain30d = (current.weighted - previous.weighted) * 100;
+  const net12w = VELOCITY.reduce((sum, week) => sum + week.aligned + week.reviewed + week.fixing, 0);
+  const adds = DIFF_FEED.filter(d => d.type === 'add').length;
+  const reviews = DIFF_FEED.filter(d => d.type === 'mod').length;
+  const regressions = DIFF_FEED.filter(d => d.type === 'del').length;
+
   return (
     <>
       <div className="sec-head">
         <span className="idx">§3</span>
         <div>
-          <span className="title">趋势 · 速度</span>
-          <span className="sub">加权对齐率 = Σ(已对齐 API 调用频次) / Σ(全部调用频次)</span>
+          <span className="title">Trend · Velocity</span>
         </div>
-        <span className="right mono">近 30 天 · 近 12 周</span>
+        <span className="right mono">30 days · 12 weeks</span>
       </div>
       <Row style={{ background: 'var(--panel)' }}>
         <Col span={10}>

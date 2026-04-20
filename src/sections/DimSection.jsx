@@ -39,7 +39,7 @@ export default function DimSection({ filtered }) {
   const dimAgg = DIMENSIONS.map(d => {
     const t   = tally(filtered, d.key);
     const tot = Object.values(t).reduce((a, b) => a + b, 0);
-    return { d, t, tot, rate: (t.aligned + t.reviewed) / tot, rawRate: t.aligned / tot };
+    return { d, t, tot, rate: tot ? (t.aligned + t.reviewed) / tot : 0, rawRate: tot ? t.aligned / tot : 0 };
   });
 
   return (
@@ -63,7 +63,6 @@ export default function DimSection({ filtered }) {
                 <div className="dim-letter-big" style={{ background: dimColor }}>{d.letter}</div>
                 <div style={{ flex: 1 }}>
                   <div className="dim-name">{d.name}</div>
-                  <div className="dim-hint">{DIM_HINTS[d.key]}</div>
                 </div>
               </div>
               <div className="dim-metric">

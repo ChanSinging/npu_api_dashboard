@@ -41,7 +41,7 @@ export default function RepoSection({ onFocus }) {
   return (
     <>
       <div className="sec-head">
-        <span className="idx">§4</span>
+        <span className="idx">§2</span>
         <div>
           <span className="title">
             下游AI生态库
@@ -81,3 +81,4 @@ export default function RepoSection({ onFocus }) {
     </>
   );
 }
+
