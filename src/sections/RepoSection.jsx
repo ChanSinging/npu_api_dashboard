@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { Card, Row, Col, Table, Tag } from 'antd';
 import { REPOS, STATUS_META } from '../data';
 import { RepoBubbles } from '../charts';
@@ -15,6 +16,7 @@ const BLOCKING_APIS = [
 ];
 
 export default function RepoSection({ onFocus }) {
+  const navigate = useNavigate();
   const avgRepoRate     = REPOS.reduce((s, r) => s + r.rate, 0) / REPOS.length;
   const fullyGreenRepos = REPOS.filter(r => r.rate >= 0.95).length;
   const totalUsed    = REPOS.reduce((s, r) => s + r.apiUsed, 0);
@@ -74,6 +76,10 @@ export default function RepoSection({ onFocus }) {
               size="small"
               className="htab"
               style={{ fontFamily: 'var(--font-mono)' }}
+              onRow={record => ({
+                onClick: () => navigate(`/api/${encodeURIComponent(record.api)}`),
+                style: { cursor: 'pointer' },
+              })}
             />
           </Card>
         </Col>

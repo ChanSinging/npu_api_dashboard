@@ -5,7 +5,7 @@ import { colors } from './EChart';
 
 const { Header } = Layout;
 
-export default function Topbar({ search, setSearch }) {
+export default function Topbar({ search, setSearch, onImportClick }) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -64,6 +64,16 @@ export default function Topbar({ search, setSearch }) {
         </div>
       </div>
       <div className="tb-cell"><span className="pill"><span className="dot" />CI · 23 任务</span></div>
+      <div className="tb-cell">
+        <button
+          className="import-btn"
+          type="button"
+          onClick={onImportClick}
+          title="导入 API 数据"
+        >
+          ↗ 导入
+        </button>
+      </div>
       <div className="tb-cell"><span className="mono dim" style={{ fontSize: 11 }}>torch 2.7.0</span></div>
       <div className="tb-cell"><span className="mono dim" style={{ fontSize: 11 }}>CANN 9.0.0</span></div>
       <div className="tb-cell right"><div className="avatar">ZS</div></div>
