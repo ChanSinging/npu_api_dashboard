@@ -3,22 +3,19 @@ import { MODULES, DIMENSIONS, STATUS_META, moduleRate } from '../data';
 
 function apiColor(api) {
   const dims = Object.values(api.dims);
-  if (dims.every(d => d === 'untested')) return 'untested';
   if (dims.some(d => d === 'fixing')) return 'fixing';
   if (dims.every(d => d === 'aligned' || d === 'reviewed')) return 'aligned';
-  return 'partial';
+  return 'untested';
 }
 
 const COLOR_MAP = {
   aligned: 'var(--s-aligned)',
-  partial: 'var(--s-reviewed)',
   fixing: 'var(--s-fixing)',
   untested: 'var(--s-untested)',
 };
 
 const LABEL_MAP = {
   aligned: '完全对齐',
-  partial: '部分对齐',
   fixing: '待修复',
   untested: '未测试',
 };
@@ -33,7 +30,7 @@ export default function PixelMatrix({ apis, onFocus }) {
     return (
       <div className="pxmat-empty">
         <b>没有匹配的 API</b>
-        <span>调整搜索词、矩阵筛选或模块筛选后再查看。</span>
+        <span>调整搜索词或等级筛选后再查看。</span>
       </div>
     );
   }

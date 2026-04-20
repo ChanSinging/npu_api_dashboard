@@ -3,20 +3,14 @@ import { APIS, REPOS, TREND_30D, DIMENSIONS, overallAlignment, weightedAlignment
 import { HeroGauge } from '../charts';
 
 function buildStats(list) {
-  const stats = { total: list.length, aligned: 0, partial: 0, fixing: 0, untested: 0 };
+  const stats = { total: list.length, aligned: 0, fixing: 0, untested: 0 };
 
   list.forEach(api => {
-    const status = api.alignment || (
-      DIMENSIONS.every(d => api.dims[d.key] === 'untested') ? 'untested' :
-      DIMENSIONS.some(d => api.dims[d.key] === 'fixing' || api.dims[d.key] === 'unsupported') ? 'fixing' :
-      DIMENSIONS.some(d => api.dims[d.key] === 'reviewed') ? 'reviewed' :
-      'aligned'
-    );
-
-    if (status === 'aligned') stats.aligned++;
-    else if (status === 'reviewed') stats.partial++;
-    else if (status === 'untested') stats.untested++;
-    else stats.fixing++;
+    const dims = DIMENSIONS.map(d => api.dims[d.key]);
+    if (dims.every(v => v === 'untested' || v === 'unsupported')) stats.untested++;
+    else if (dims.some(v => v === 'fixing')) stats.fixing++;
+    else if (dims.every(v => v === 'aligned' || v === 'reviewed')) stats.aligned++;
+    else stats.untested++;
   });
 
   return stats;

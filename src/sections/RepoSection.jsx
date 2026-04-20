@@ -1,5 +1,6 @@
 import { REPOS, STATUS_META } from '../data';
 import { RepoBubbles } from '../charts';
+import LevelFilter from '../components/LevelFilter';
 
 const BLOCKING_APIS = [
   { api: 'torch.nn.functional.scaled_dot_product_attention', n: 7, freq: '3.9M', s: 'reviewed' },
@@ -12,7 +13,7 @@ const BLOCKING_APIS = [
   { api: 'torch.einsum',                                     n: 3, freq: '1.1M', s: 'aligned'  },
 ];
 
-export default function RepoSection({ onFocus }) {
+export default function RepoSection({ onFocus, levelFilter }) {
   const avgRepoRate     = REPOS.reduce((s, r) => s + r.rate, 0) / REPOS.length;
   const fullyGreenRepos = REPOS.filter(r => r.rate >= 0.95).length;
   const totalUsed    = REPOS.reduce((s, r) => s + r.apiUsed, 0);
@@ -23,10 +24,9 @@ export default function RepoSection({ onFocus }) {
     <>
       <div className="sec-head">
         <span className="idx">§2</span>
-        <div>
-          <span className="title">
-            下游 repo 可用性
-          </span>
+        <div className="sec-head-title">
+          <span className="title">下游 repo 可用性</span>
+          {levelFilter ? <LevelFilter {...levelFilter} /> : null}
         </div>
         <span className="right mono">10 项目 · 均值 {(avgRepoRate * 100).toFixed(0)}% · {fullyGreenRepos} 项 ≥95%</span>
       </div>

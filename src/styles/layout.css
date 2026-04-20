@@ -10,6 +10,55 @@
 .sec-head .sub   { font-size: 10.5px; color: var(--fg-3); margin-left: 10px; }
 .sec-head .right { font-size: 10.5px; color: var(--fg-3); }
 
+.sec-head-title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+/* ── Level filter (multi-select L0/L1/L2) ── */
+.level-filter {
+  display: inline-flex;
+  gap: 4px;
+  font-family: var(--font-mono);
+}
+.level-filter button {
+  min-height: 22px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--fg-3);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 7px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: border-color .12s ease, color .12s ease, background .12s ease;
+}
+.level-filter button:hover {
+  border-color: var(--line-hard);
+  color: var(--fg);
+}
+.level-filter button.active {
+  color: var(--fg);
+  background: var(--panel-hi);
+  border-color: var(--fg-3);
+  box-shadow: inset 0 -2px 0 var(--npu);
+}
+.level-filter button b {
+  color: var(--fg);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  font-size: 10.5px;
+}
+.level-filter button:not(.active) b {
+  color: var(--fg-4);
+}
+
 /* ── Content blocks ── */
 .mat-main { display: grid; grid-template-columns: minmax(0, 1fr) 380px; background: var(--panel); }
 .mat-left  { border-right: 1px solid var(--line); }

@@ -1,9 +1,8 @@
 export default function HeroGauge({ stats, label }) {
   const size = 140, cx = size / 2, cy = size / 2, r = 53, tk = 12;
   const startDeg = 210, endDeg = 510, totalDeg = endDeg - startDeg;
-  const { total, aligned, partial, fixing, untested } = stats;
-  const ready = aligned + partial;
-  const rate = total ? ready / total : 0;
+  const { total, aligned, fixing, untested } = stats;
+  const rate = total ? aligned / total : 0;
 
   const arcPath = (s, e, rr) => {
     const sa = (s - 90) * Math.PI / 180;
@@ -13,9 +12,8 @@ export default function HeroGauge({ stats, label }) {
   };
 
   const segments = [
-    { key: 'aligned', name: '对齐', val: aligned, color: 'var(--s-aligned)' },
-    { key: 'reviewed', name: '复核', val: partial, color: 'var(--s-reviewed)' },
-    { key: 'fixing', name: '待修', val: fixing, color: 'var(--s-fixing)' },
+    { key: 'aligned',  name: '对齐', val: aligned,  color: 'var(--s-aligned)'  },
+    { key: 'fixing',   name: '待修', val: fixing,   color: 'var(--s-fixing)'   },
     { key: 'untested', name: '未测', val: untested, color: 'var(--s-untested)' },
   ];
 
@@ -35,7 +33,7 @@ export default function HeroGauge({ stats, label }) {
           <span>API 指标</span>
           <b>{label}</b>
         </div>
-        <strong>{ready.toLocaleString()}<span>/{total.toLocaleString()}</span></strong>
+        <strong>{aligned.toLocaleString()}<span>/{total.toLocaleString()}</span></strong>
       </div>
 
       <svg className="hero-gauge-svg" viewBox={`0 0 ${size} ${size}`}>
@@ -62,7 +60,7 @@ export default function HeroGauge({ stats, label }) {
         ))}
       </div>
 
-      <div className="hero-ring-detail" title={`对齐 ${aligned} API · 复核 ${partial} API · 待修 ${fixing} API · 未测 ${untested} API · 合计 ${total} API`}>
+      <div className="hero-ring-detail" title={`对齐 ${aligned} API · 待修 ${fixing} API · 未测 ${untested} API · 合计 ${total} API`}>
         {segments.map(seg => (
           <span key={seg.key}>
             <i className="d" style={{ background: seg.color, border: seg.key === 'untested' ? '1px solid var(--line)' : undefined }} />
