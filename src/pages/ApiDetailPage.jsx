@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, Tag, Button, Row, Col, Collapse } from 'antd';
 import { ArrowLeftOutlined, HomeOutlined, LinkOutlined } from '@ant-design/icons';
-import { APIS, DIMENSIONS, STATUS_META, MODULES } from '../data';
+import { APIS, DIMENSIONS, STATUS_META, MODULES, API_REUSE_MAP } from '../data';
 import { colors } from '../components/EChart';
 import MiniRadial from '../charts/MiniRadial';
 
@@ -224,6 +224,48 @@ export default function ApiDetailPage() {
             </div>
           </Card>
         </div>
+
+        {API_REUSE_MAP[api.name] && (
+          <Card
+            variant="borderless"
+            style={{ background: 'var(--panel)', border: '1px solid var(--line-soft)', marginBottom: 20 }}
+            styles={{ body: { padding: '14px 18px' } }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+              <span style={{
+                display: 'inline-block', width: 20, height: 20, lineHeight: '20px',
+                textAlign: 'center', background: colors.npu, color: '#fff',
+                fontFamily: 'var(--font-mono)', fontSize: 10, fontWeight: 600, borderRadius: 2,
+              }}>R</span>
+              <span className="mono" style={{ fontSize: 12, fontWeight: 500, color: colors.fg }}>复用测试用例</span>
+              <span className="mono dim" style={{ fontSize: 10 }}>
+                以下 API 与 {api.name} 共享底层实现，测试用例可复用
+              </span>
+            </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              {API_REUSE_MAP[api.name].map(refName => {
+                const refApi = APIS.find(a => a.name === refName);
+                const refAligned = refApi && DIMENSIONS.every(d => refApi.dims[d.key] === 'aligned' || refApi.dims[d.key] === 'reviewed');
+                return (
+                  <Tag
+                    key={refName}
+                    bordered={false}
+                    style={{
+                      fontFamily: 'var(--font-mono)', fontSize: 10.5,
+                      background: refAligned ? 'var(--s-aligned-dim, rgba(61,153,102,0.1))' : 'var(--line-soft)',
+                      color: refAligned ? colors.aligned : colors.fg,
+                      border: `1px solid ${refAligned ? 'var(--s-aligned, #3d9966)' : 'var(--line-soft)'}`,
+                      padding: '2px 8px',
+                    }}
+                  >
+                    <span style={{ color: refAligned ? colors.aligned : colors.fg3, fontSize: 9, marginRight: 4 }}>●</span>
+                    {refName}
+                  </Tag>
+                );
+              })}
+            </div>
+          </Card>
+        )}
 
         <div style={{ marginBottom: 8 }}>
           <div className="sec-head" style={{ margin: 0 }}>

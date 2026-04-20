@@ -44,8 +44,7 @@ export default function RepoSection({ onFocus }) {
         <span className="idx">§4</span>
         <div>
           <span className="title">
-            下游 repo 可用性
-            <span className="mono dim" style={{ marginLeft: 8, fontSize: 10 }}>若今日发版，这些开源项目能在 NPU 上跑吗？</span>
+            下游AI生态库
           </span>
         </div>
         <span className="right mono">10 项目 · 均值 {(avgRepoRate * 100).toFixed(0)}% · {fullyGreenRepos} 项 ≥95%</span>
