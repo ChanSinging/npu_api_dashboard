@@ -132,8 +132,8 @@ export default function ApiListPage() {
       dataIndex: 'updatedAt',
       key: 'updatedAt',
       width: 90,
-      sorter: (a, b) => a.updatedAt.localeCompare(b.updatedAt),
-      render: (v) => <span className="mono dim" style={{ fontSize: 10 }}>{v}</span>,
+      sorter: (a, b) => (a.updatedAt || '').localeCompare(b.updatedAt || ''),
+      render: (v) => <span className="mono dim" style={{ fontSize: 10 }}>{v || '—'}</span>,
     },
   ];
 

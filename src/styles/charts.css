@@ -1,16 +1,163 @@
 /* ── Pixel Matrix ── */
 .pxmat-legend { display: flex; gap: 14px; font-family: var(--font-mono); font-size: 10.5px; color: var(--fg-3); align-items: center; }
 .pxmat-legend .swatch { width: 10px; height: 10px; display: inline-block; border-radius: 1px; margin-right: 5px; vertical-align: -1px; }
-.pxmat-quad {
-  display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;
-  gap: 0.5px; background: var(--panel); cursor: pointer; position: relative; flex-shrink: 0;
+.matrix-section {
+  background: var(--panel);
 }
-.pxmat-quad:hover { outline: 1.5px solid var(--fg); outline-offset: 1px; z-index: 2; }
-.pxmat-quad span { background: var(--s-untested); }
-.pxmat-quad span.aligned     { background: var(--s-aligned); }
-.pxmat-quad span.reviewed    { background: var(--s-reviewed); }
-.pxmat-quad span.fixing      { background: var(--s-fixing); }
-.pxmat-quad span.unsupported { background: var(--s-unsupported); }
+.matrix-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 0.75fr);
+  gap: 16px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-1);
+}
+.matrix-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--line-soft);
+  border: 1px solid var(--line-soft);
+  font-family: var(--font-mono);
+}
+.matrix-stat {
+  min-width: 0;
+  background: var(--panel);
+  padding: 9px 10px;
+  box-shadow: inset 0 2px 0 var(--line-soft);
+}
+.matrix-stat.hot { box-shadow: inset 0 2px 0 var(--s-fixing); }
+.matrix-stat.good { box-shadow: inset 0 2px 0 var(--s-aligned); }
+.matrix-stat span {
+  display: block;
+  font-size: 9.5px;
+  line-height: 1.15;
+  color: var(--fg-3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.matrix-stat b {
+  display: block;
+  margin-top: 4px;
+  color: var(--fg);
+  font-size: 19px;
+  line-height: 1.05;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.matrix-stat.hot b { color: var(--s-fixing); }
+.matrix-stat.good b { color: var(--s-aligned); }
+.matrix-stat em {
+  display: block;
+  margin-top: 4px;
+  color: var(--fg-4);
+  font-size: 10px;
+  line-height: 1.2;
+  font-style: normal;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.matrix-controls {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: var(--font-mono);
+}
+.matrix-filter-row,
+.matrix-module-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.matrix-controls button {
+  min-height: 28px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--fg-2);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 8px;
+  border-radius: 2px;
+  cursor: pointer;
+}
+.matrix-controls button:hover {
+  border-color: var(--line-hard);
+  color: var(--fg);
+}
+.matrix-controls button.active {
+  color: var(--fg);
+  background: var(--panel-hi);
+  border-color: var(--fg-3);
+  box-shadow: inset 0 -2px 0 var(--npu);
+}
+.matrix-controls button b {
+  color: var(--fg);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.matrix-module-row button span {
+  max-width: 128px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.matrix-body {
+  padding: 12px 16px;
+}
+.pxmat-row {
+  display: grid;
+  grid-template-columns: 140px minmax(0, 1fr) 54px;
+  gap: 10px;
+  align-items: center;
+  padding: 3px 0;
+  border-bottom: 1px dashed var(--line-soft);
+}
+.pxmat-module {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-align: right;
+  color: var(--fg-2);
+  padding-right: 8px;
+}
+.pxmat-cells {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5px;
+  min-width: 0;
+}
+.pxmat-rate {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--fg);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.pxmat-empty {
+  min-height: 180px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 4px;
+  color: var(--fg-3);
+  font-family: var(--font-mono);
+  border: 1px dashed var(--line);
+  background: var(--bg-1);
+}
+.pxmat-empty b {
+  color: var(--fg);
+  font-weight: 500;
+}
+.pxmat-empty span {
+  font-size: 10.5px;
+}
 
 /* ── Hi-impact table ── */
 .htab { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 11.5px; }

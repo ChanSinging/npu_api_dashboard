@@ -82,7 +82,7 @@ function DimCard({ dim, api, color }) {
         }}>
           <div className="mono" style={{ fontSize: 10, fontWeight: 500, color: colors.fg, marginBottom: 4 }}>差异说明</div>
           <div className="mono dim" style={{ fontSize: 10, lineHeight: 1.5 }}>
-            该 API 在 NPU 上存在已知差异，已通过评审确认可接受。评审人: {api.updatedBy} · {api.updatedAt}
+            该 API 在 NPU 上存在已知差异，已通过评审确认可接受。{api.updatedBy ? `评审人: ${api.updatedBy}` : ''}{api.updatedAt ? ` · ${api.updatedAt}` : ''}
           </div>
         </div>
       )}
@@ -95,7 +95,7 @@ function DimCard({ dim, api, color }) {
         }}>
           <div className="mono" style={{ fontSize: 10, fontWeight: 500, color: colors.fixing, marginBottom: 4 }}>待修复</div>
           <div className="mono dim" style={{ fontSize: 10, lineHeight: 1.5 }}>
-            该维度存在未对齐差异，正在修复中。负责人: {api.updatedBy}
+            该维度存在未对齐差异，正在修复中。{api.updatedBy ? `负责人: ${api.updatedBy}` : ''}
           </div>
         </div>
       )}
@@ -148,7 +148,7 @@ export default function ApiDetailPage() {
         <div style={{ padding: '8px 10px', background: 'var(--bg-1)', borderRadius: 2 }}>
           <div className="mono dim" style={{ fontSize: 9.5 }}>通过率</div>
           <div className="mono" style={{ fontSize: 18, fontWeight: 500, color: colors.fg, marginTop: 2 }}>
-            {(api.casePass / api.caseTotal * 100).toFixed(0)}<span style={{ fontSize: 10, color: colors.fg3 }}>%</span>
+            {api.caseTotal > 0 ? (api.casePass / api.caseTotal * 100).toFixed(0) : '—'}<span style={{ fontSize: 10, color: colors.fg3 }}>{api.caseTotal > 0 ? '%' : ''}</span>
           </div>
         </div>
       </div>
@@ -214,7 +214,7 @@ export default function ApiDetailPage() {
           <Card variant="borderless" styles={{ body: { padding: '14px 18px' } }} style={{ borderRadius: 0 }}>
             <div className="mono dim" style={{ fontSize: 9.5, textTransform: 'uppercase', letterSpacing: '0.06em' }}>最后更新</div>
             <div className="mono" style={{ fontSize: 14, fontWeight: 500, color: colors.fg, marginTop: 4 }}>
-              {api.updatedAt} · {api.updatedBy}
+              {api.updatedAt || '—'} · {api.updatedBy || '—'}
             </div>
           </Card>
           <Card variant="borderless" styles={{ body: { padding: '14px 18px' } }} style={{ borderRadius: 0 }}>
