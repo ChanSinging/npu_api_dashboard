@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { APIS, REPOS, TREND_30D, DIMENSIONS, overallAlignment, weightedAlignment } from '../data';
 import { HeroGauge } from '../charts';
-import { colors } from '../components/EChart';
 
 function buildStats(list) {
   const stats = { total: list.length, aligned: 0, fixing: 0, untested: 0 };
@@ -22,7 +21,6 @@ export default function HeroSection({ filtered = [] }) {
   const wv = useMemo(() => weightedAlignment(filtered), [filtered]);
 
   const totalCases = filtered.reduce((s, a) => s + a.caseTotal, 0);
-  const passCases  = filtered.reduce((s, a) => s + a.casePass, 0);
   const l0         = filtered.filter(a => a.level === 'L0');
   const l01        = filtered.filter(a => a.level === 'L0' || a.level === 'L1');
   const change30d  = (wv.rate - TREND_30D[0].weighted) * 100;
@@ -33,7 +31,6 @@ export default function HeroSection({ filtered = [] }) {
 
   const l01Covered = l01.filter(a => DIMENSIONS.every(d => a.dims[d.key] !== 'untested'));
   const l01Aligned = l01.filter(a => DIMENSIONS.every(d => a.dims[d.key] === 'aligned' || a.dims[d.key] === 'reviewed'));
-  const l0Aligned  = l0.filter(a => DIMENSIONS.every(d => a.dims[d.key] === 'aligned' || a.dims[d.key] === 'reviewed')).length;
 
   return (
     <section className="hero-solo">
@@ -64,14 +61,9 @@ export default function HeroSection({ filtered = [] }) {
         </div>
         <div className="hero-side">
           <div className="hero-gauge-row">
-            <HeroGauge rate={l0Stats.aligned / l0Stats.total} rawRate={l0Stats.aligned / l0Stats.total} />
-            <HeroGauge rate={l01Stats.aligned / l01Stats.total} rawRate={l01Stats.aligned / l01Stats.total} />
-            <HeroGauge rate={wv.rate} rawRate={ov.rate} />
-          </div>
-          <div className="hero-gauge-legend">
-            <span><span className="sw" style={{ background: colors.npu }} />加权 {(wv.rate * 100).toFixed(1)}%</span>
-            <span><span className="sw" style={{ background: colors.fg3, border: '1px dashed ' + colors.fg3 }} />平均 {(ov.rate * 100).toFixed(1)}%</span>
-            <span><span className="sw" style={{ background: colors.aligned }} />30d {change30d >= 0 ? '+' : ''}{change30d.toFixed(1)}pp</span>
+            <HeroGauge stats={l0Stats} label="L0" />
+            <HeroGauge stats={l01Stats} label="L0+L1" />
+            <HeroGauge stats={allStats} label="全量" />
           </div>
         </div>
         <div className="hero-action-grid">
