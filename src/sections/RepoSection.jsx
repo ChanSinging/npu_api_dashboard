@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, Row, Col, Table, Tag } from 'antd';
 import { REPOS, STATUS_META } from '../data';
@@ -15,12 +16,20 @@ const BLOCKING_APIS = [
   { api: 'torch.einsum',                                     n: 3, freq: '1.1M', s: 'aligned'  },
 ];
 
+const PAGE_SIZE = 10;
+
 export default function RepoSection({ onFocus, levelFilter }) {
+  const navigate = useNavigate();
+  const [page, setPage] = useState(0);
+
   const avgRepoRate     = REPOS.reduce((s, r) => s + r.rate, 0) / REPOS.length;
   const fullyGreenRepos = REPOS.filter(r => r.rate >= 0.95).length;
   const totalUsed    = REPOS.reduce((s, r) => s + r.apiUsed, 0);
   const totalAligned = REPOS.reduce((s, r) => s + r.apiAligned, 0);
   const totalMissing = REPOS.reduce((s, r) => s + r.missing, 0);
+
+  const totalPages = Math.ceil(REPOS.length / PAGE_SIZE);
+  const pagedRepos = REPOS.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
 
   const columns = [
     { title: 'API', dataIndex: 'api', key: 'api', render: v => <span className="mono" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 220, display: 'inline-block' }}>{v}</span> },
@@ -47,13 +56,29 @@ export default function RepoSection({ onFocus, levelFilter }) {
           <span className="title">下游 repo 可用性</span>
           {levelFilter ? <LevelFilter {...levelFilter} /> : null}
         </div>
-        <span className="right mono">10 项目 · 均值 {(avgRepoRate * 100).toFixed(0)}% · {fullyGreenRepos} 项 ≥95%</span>
+        <span className="right mono">{REPOS.length} 项目 · 均值 {(avgRepoRate * 100).toFixed(0)}% · {fullyGreenRepos} 项 ≥95%</span>
       </div>
       <Row style={{ background: 'var(--panel)' }}>
         <Col span={16}>
           <Card className="block" bordered={false} style={{ borderRight: '1px solid var(--line)', height: '100%' }} bodyStyle={{ padding: '14px 16px', height: '100%' }}>
-            <RepoBubbles repos={REPOS} onFocus={onFocus} />
-            <div style={{ marginTop: 8, paddingTop: 8, borderTop: '1px dashed var(--line)', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 2, fontFamily: 'var(--font-mono)' }}>
+            <RepoBubbles repos={pagedRepos} onFocus={onFocus} />
+            <div style={{ marginTop: 10, padding: '8px 0', borderTop: '1px dashed var(--line)', borderBottom: '1px dashed var(--line)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontFamily: 'var(--font-mono)', fontSize: 11 }}>
+              <span style={{ color: 'var(--fg-3)' }}>第 {page + 1} / {totalPages} 页 · 本页 {pagedRepos.length} 个</span>
+              <div className="repo-pager">
+                <button disabled={page === 0} onClick={() => setPage(p => p - 1)}>←</button>
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <button
+                    key={i}
+                    className={i === page ? 'active' : ''}
+                    onClick={() => setPage(i)}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+                <button disabled={page >= totalPages - 1} onClick={() => setPage(p => p + 1)}>→</button>
+              </div>
+            </div>
+            <div style={{ marginTop: 8, paddingTop: 8, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 2, fontFamily: 'var(--font-mono)' }}>
               <div><div className="mono" style={{ fontSize: 10, color: 'var(--fg-3)' }}>加权项目总API</div><div style={{ fontSize: 15, marginTop: 2 }}>{totalUsed.toLocaleString()}</div></div>
               <div><div className="mono" style={{ fontSize: 10, color: 'var(--fg-3)' }}>可跑</div><div style={{ fontSize: 15, marginTop: 2, color: 'var(--s-aligned)' }}>{totalAligned.toLocaleString()}</div></div>
               <div><div className="mono" style={{ fontSize: 10, color: 'var(--fg-3)' }}>阻塞</div><div style={{ fontSize: 15, marginTop: 2, color: 'var(--s-fixing)' }}>{totalMissing.toLocaleString()}</div></div>

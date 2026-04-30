@@ -16,7 +16,26 @@ function buildStats(list) {
   return stats;
 }
 
-export default function HeroSection({ filtered = [] }) {
+function CannSelector({ versions, active, onChange }) {
+  return (
+    <div className="cann-selector">
+      {versions.map(v => (
+        <button
+          key={v.value}
+          className={active?.value === v.value ? 'active' : ''}
+          onClick={() => onChange(v)}
+          type="button"
+          title={v.torch}
+        >
+          <span className="label">{v.label}</span>
+          <span className="sub">{v.torch}</span>
+        </button>
+      ))}
+    </div>
+  );
+}
+
+export default function HeroSection({ filtered = [], cannVer, setCannVer, cannVersions }) {
   const ov = useMemo(() => overallAlignment(filtered), [filtered]);
   const wv = useMemo(() => weightedAlignment(filtered), [filtered]);
 
@@ -38,7 +57,7 @@ export default function HeroSection({ filtered = [] }) {
         <div className="hero-main">
           <div className="hero-eyebrow">
             <span className="tag npu">torch_npu</span>
-            <span className="mono dim">昇腾 910B · CANN 9.0.0 · torch 2.7.0</span>
+            <span className="mono dim">昇腾 910B</span>
           </div>
           <h1 className="hero-h1">PyTorch on NPU · API 一致性总览</h1>
           <p className="hero-lede">

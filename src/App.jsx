@@ -64,6 +64,12 @@ function ScopeBar({ search, setSearch, filtered, customApis, onResetData }) {
   );
 }
 
+const CANN_VERSIONS = [
+  { label: 'CANN 8.0.RC3', value: '8.0.RC3', torch: 'torch 2.5.1' },
+  { label: 'CANN 9.0.0', value: '9.0.0', torch: 'torch 2.7.0' },
+  { label: 'CANN 9.0.RC1', value: '9.0.RC1', torch: 'torch 2.7.0' },
+];
+
 export default function App() {
   const [search, setSearch] = useState('');
   const [focus, setFocus] = useState(null);
@@ -72,6 +78,7 @@ export default function App() {
   const [tweaks, setTweaks] = useState(TWEAKS_DEFAULTS);
   const [levels, setLevels] = useState(() => new Set(ALL_LEVELS));
   const [customApis, setCustomApis] = useState(null);
+  const [cannVer, setCannVer] = useState(CANN_VERSIONS[1]);
 
   const APIS = customApis || APIS_DEFAULT;
 
@@ -155,9 +162,9 @@ export default function App() {
 
   return (
     <>
-      <Topbar search={search} setSearch={setSearch} matched={filtered.length} total={APIS.length} onImportClick={() => setImportOn(true)} />
+      <Topbar search={search} setSearch={setSearch} matched={filtered.length} total={APIS.length} onImportClick={() => setImportOn(true)} cannVer={cannVer} setCannVer={setCannVer} cannVersions={CANN_VERSIONS} />
       <ScopeBar search={search} setSearch={setSearch} filtered={filtered} customApis={customApis} onResetData={handleResetData} />
-      <HeroSection filtered={searchFiltered} />
+      <HeroSection filtered={searchFiltered} cannVer={cannVer} setCannVer={setCannVer} cannVersions={CANN_VERSIONS} />
       <DimSection filtered={filtered} levelFilter={levelFilterProps} />
       <RepoSection onFocus={setFocus} levelFilter={levelFilterProps} />
       <TrendSection levelFilter={levelFilterProps} />
