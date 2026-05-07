@@ -1,12 +1,12 @@
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import { APIS as APIS_DEFAULT, DIMENSIONS } from './data';
-import { HeroSection, DimSection, MatrixSection, TrendSection, RepoSection } from './sections';
+import { HeroSection, DimSection, TrendSection, RepoSection } from './sections';
 import Topbar from './components/Topbar';
 import FocusCard from './components/FocusCard';
 import TweaksPanel from './components/TweaksPanel';
 import ImportPanel from './components/ImportPanel';
 
-const TWEAKS_DEFAULTS = { matrixDensity: 'dense', showCudaBaseline: true };
+const TWEAKS_DEFAULTS = { showCudaBaseline: true };
 const ALL_LEVELS = ['L0', 'L1', 'L2'];
 
 function ScopeBar({ search, setSearch, filtered, customApis, onResetData }) {
@@ -168,7 +168,6 @@ export default function App() {
       <DimSection filtered={filtered} levelFilter={levelFilterProps} />
       <RepoSection onFocus={setFocus} levelFilter={levelFilterProps} />
       <TrendSection levelFilter={levelFilterProps} />
-      <MatrixSection filtered={filtered} onFocus={setFocus} levelFilter={levelFilterProps} />
       <FocusCard focus={focus} onClose={() => setFocus(null)} />
       <TweaksPanel tweaksOn={tweaksOn} tweaks={tweaks} setTweak={setTweak} />
       <ImportPanel open={importOn} onClose={() => setImportOn(false)} onImport={handleImport} />
