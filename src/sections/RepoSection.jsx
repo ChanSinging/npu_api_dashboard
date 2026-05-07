@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, Row, Col, Table, Tag } from 'antd';
-import { REPOS, STATUS_META } from '../data';
+import { APIS, REPOS, STATUS_META } from '../data';
 import { RepoBubbles } from '../charts';
 import LevelFilter from '../components/LevelFilter';
 
@@ -24,10 +24,6 @@ export default function RepoSection({ onFocus, levelFilter }) {
 
   const avgRepoRate     = REPOS.reduce((s, r) => s + r.rate, 0) / REPOS.length;
   const fullyGreenRepos = REPOS.filter(r => r.rate >= 0.95).length;
-  const totalUsed    = REPOS.reduce((s, r) => s + r.apiUsed, 0);
-  const totalAligned = REPOS.reduce((s, r) => s + r.apiAligned, 0);
-  const totalMissing = REPOS.reduce((s, r) => s + r.missing, 0);
-  const weightedAvgRate = totalAligned / totalUsed;
 
   const totalPages = Math.ceil(REPOS.length / PAGE_SIZE);
   const pagedRepos = REPOS.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
@@ -81,10 +77,9 @@ export default function RepoSection({ onFocus, levelFilter }) {
             </div>
             <div style={{ marginTop: 8, paddingTop: 8, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px 2px', fontFamily: 'var(--font-mono)' }}>
               <div><div className="mono" style={{ fontSize: 10, color: 'var(--fg-3)' }}>生态全量去重 torch API</div><div style={{ fontSize: 15, marginTop: 2 }}>2,541</div></div>
-              <div><div className="mono" style={{ fontSize: 10, color: 'var(--fg-3)' }}>加权项目总API</div><div style={{ fontSize: 15, marginTop: 2 }}>{totalUsed.toLocaleString()}</div></div>
-              <div><div className="mono" style={{ fontSize: 10, color: 'var(--fg-3)' }}>可跑</div><div style={{ fontSize: 15, marginTop: 2, color: 'var(--s-aligned)' }}>{totalAligned.toLocaleString()}</div></div>
-              <div><div className="mono" style={{ fontSize: 10, color: 'var(--fg-3)' }}>阻塞</div><div style={{ fontSize: 15, marginTop: 2, color: 'var(--s-fixing)' }}>{totalMissing.toLocaleString()}</div></div>
-              <div><div className="mono" style={{ fontSize: 10, color: 'var(--fg-3)' }}>平均对齐率</div><div style={{ fontSize: 15, marginTop: 2 }}>{(weightedAvgRate * 100).toFixed(1)}%</div></div>
+              <div><div className="mono" style={{ fontSize: 10, color: 'var(--fg-3)' }}>可跑</div><div style={{ fontSize: 15, marginTop: 2, color: 'var(--s-aligned)' }}>1,758</div></div>
+              <div><div className="mono" style={{ fontSize: 10, color: 'var(--fg-3)' }}>阻塞</div><div style={{ fontSize: 15, marginTop: 2, color: 'var(--s-fixing)' }}>783</div></div>
+              <div><div className="mono" style={{ fontSize: 10, color: 'var(--fg-3)' }}>平均对齐率</div><div style={{ fontSize: 15, marginTop: 2 }}>69.2%</div></div>
               <div><div className="mono" style={{ fontSize: 10, color: 'var(--fg-3)' }}>全绿发版可能性</div><div style={{ fontSize: 15, marginTop: 2 }}>{fullyGreenRepos}/{REPOS.length} = {(fullyGreenRepos / REPOS.length * 100).toFixed(1)}%</div></div>
             </div>
           </Card>
