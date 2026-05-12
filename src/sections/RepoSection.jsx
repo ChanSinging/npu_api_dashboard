@@ -94,7 +94,7 @@ export default function RepoSection({ onFocus, levelFilter, filtered = [] }) {
       <div className="sec-head">
         <span className="idx">§2</span>
         <div className="sec-head-title">
-          <span className="title">下游 repo 可用性</span>
+          <span className="title">下游 repo 开箱可用度</span>
           {levelFilter ? <LevelFilter {...levelFilter} /> : null}
         </div>
         <span className="right mono">{dynamicRepos.length} 项目 · 均值 {(avgRepoRate * 100).toFixed(0)}% · {fullyGreenRepos} 项 ≥95%</span>
