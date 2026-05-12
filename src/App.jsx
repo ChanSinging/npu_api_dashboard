@@ -7,7 +7,8 @@ import TweaksPanel from './components/TweaksPanel';
 import ImportPanel from './components/ImportPanel';
 
 const TWEAKS_DEFAULTS = { showCudaBaseline: true };
-const ALL_LEVELS = ['L0', 'L1', 'L2'];
+const DEFAULT_LEVELS = ['L01'];
+const L01_SET = new Set(['L0', 'L1']);
 
 function ScopeBar({ search, setSearch, filtered, customApis, onResetData }) {
   const total = filtered.length;
@@ -55,7 +56,7 @@ function ScopeBar({ search, setSearch, filtered, customApis, onResetData }) {
           </button>
         )}
         <span><b>{total.toLocaleString()}</b> APIs</span>
-        <span><b>{ready.toLocaleString()}</b> release-ready</span>
+        <span><b>{ready.toLocaleString()}</b> 四维全齐</span>
         <span className={blockingDims ? 'bad' : 'good'}><b>{blockingDims.toLocaleString()}</b> blocking dims</span>
         <span><b>{untestedDims.toLocaleString()}</b> untested dims</span>
         <span><b>{topModule?.module || 'clear'}</b> top risk</span>
@@ -76,7 +77,7 @@ export default function App() {
   const [tweaksOn, setTweaksOn] = useState(false);
   const [importOn, setImportOn] = useState(false);
   const [tweaks, setTweaks] = useState(TWEAKS_DEFAULTS);
-  const [levels, setLevels] = useState(() => new Set(ALL_LEVELS));
+  const [levels, setLevels] = useState(() => new Set(DEFAULT_LEVELS));
   const [customApis, setCustomApis] = useState(null);
   const [cannVer, setCannVer] = useState(CANN_VERSIONS[1]);
 
@@ -148,13 +149,20 @@ export default function App() {
   }, [search]);
 
   const levelCounts = useMemo(() => {
-    const counts = { L0: 0, L1: 0, L2: 0 };
-    searchFiltered.forEach(a => { if (counts[a.level] != null) counts[a.level]++; });
+    const counts = { L01: 0, L2: 0 };
+    searchFiltered.forEach(a => {
+      if (a.level === 'L0' || a.level === 'L1') counts.L01++;
+      else if (a.level === 'L2') counts.L2++;
+    });
     return counts;
   }, [searchFiltered]);
 
   const filtered = useMemo(
-    () => searchFiltered.filter(a => levels.has(a.level)),
+    () => searchFiltered.filter(a => {
+      if (levels.has('L01') && L01_SET.has(a.level)) return true;
+      if (levels.has('L2') && a.level === 'L2') return true;
+      return false;
+    }),
     [searchFiltered, levels]
   );
 
@@ -166,7 +174,7 @@ export default function App() {
       <ScopeBar search={search} setSearch={setSearch} filtered={filtered} customApis={customApis} onResetData={handleResetData} />
       <HeroSection filtered={searchFiltered} cannVer={cannVer} setCannVer={setCannVer} cannVersions={CANN_VERSIONS} />
       <DimSection filtered={filtered} levelFilter={levelFilterProps} />
-      <RepoSection onFocus={setFocus} levelFilter={levelFilterProps} />
+      <RepoSection onFocus={setFocus} levelFilter={levelFilterProps} filtered={filtered} />
       <TrendSection levelFilter={levelFilterProps} />
       <FocusCard focus={focus} onClose={() => setFocus(null)} />
       <TweaksPanel tweaksOn={tweaksOn} tweaks={tweaks} setTweak={setTweak} />

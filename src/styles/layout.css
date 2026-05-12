@@ -134,7 +134,7 @@
 .hero-solo-grid {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(560px, 610px);
+  grid-template-columns: minmax(0, 1fr) minmax(660px, 720px);
   grid-template-areas:
     "main gauges"
     "actions gauges";
@@ -142,7 +142,7 @@
   align-items: center;
 }
 .hero-side { grid-area: gauges; display: flex; flex-direction: column; gap: 14px; min-width: 0; justify-self: stretch; }
-.hero-gauge-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; justify-content: center; }
+.hero-gauge-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; justify-content: end; }
 .hero-gauge-col {
   position: relative;
   min-width: 0;
@@ -228,7 +228,7 @@
   margin-top: 4px;
   background: var(--line-soft);
   border: 1px solid var(--line-soft);
-  max-width: 760px;
+  max-width: 860px;
   font-family: var(--font-mono);
 }
 

@@ -50,6 +50,8 @@ export default function HeroSection({ filtered = [], cannVer, setCannVer, cannVe
 
   const l01Covered = l01.filter(a => DIMENSIONS.every(d => a.dims[d.key] !== 'untested'));
   const l01Aligned = l01.filter(a => DIMENSIONS.every(d => a.dims[d.key] === 'aligned' || a.dims[d.key] === 'reviewed'));
+  const allCovered = filtered.filter(a => DIMENSIONS.every(d => a.dims[d.key] !== 'untested'));
+  const allAligned = filtered.filter(a => DIMENSIONS.every(d => a.dims[d.key] === 'aligned' || a.dims[d.key] === 'reviewed'));
 
   return (
     <section className="hero-solo">
@@ -105,6 +107,21 @@ export default function HeroSection({ filtered = [], cannVer, setCannVer, cannVe
             <span>L0+L1 一致性对齐 API</span>
             <b>{l01Aligned.length.toLocaleString()}</b>
             <em>{l01.length ? (l01Aligned.length / l01.length * 100).toFixed(1) : '0.0'}% / L0+L1</em>
+          </div>
+          <div className="hero-action-card">
+            <span>全量 API 总数</span>
+            <b>{filtered.length.toLocaleString()}</b>
+            <em>全量</em>
+          </div>
+          <div className="hero-action-card">
+            <span>全量 已覆盖 API</span>
+            <b>{allCovered.length.toLocaleString()}</b>
+            <em>{filtered.length ? (allCovered.length / filtered.length * 100).toFixed(1) : '0.0'}% / 全量</em>
+          </div>
+          <div className="hero-action-card">
+            <span>全量 一致性对齐 API</span>
+            <b>{allAligned.length.toLocaleString()}</b>
+            <em>{filtered.length ? (allAligned.length / filtered.length * 100).toFixed(1) : '0.0'}% / 全量</em>
           </div>
         </div>
       </div>

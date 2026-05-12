@@ -2,6 +2,7 @@ export * from './constants';
 export * from './apis';
 export * from './metrics';
 export * from './series';
+export { REPO_API_MAP } from './repoApis';
 
 export const API_REUSE_MAP = {
   'torch.isnan': ['Tensor.isnan'],
