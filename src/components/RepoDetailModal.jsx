@@ -5,6 +5,7 @@ import { APIS, DIMENSIONS, STATUS_META, REPO_API_MAP } from '../data';
 const DIM_LABEL = { func: 'F', prec: 'P', mem: 'M', det: 'D' };
 const ROW_H = 32;
 const OVERSCAN = 6;
+const API_MAP = new Map(APIS.map(a => [a.name, a]));
 
 function useRepoApis(repo, filteredApiNames) {
   return useMemo(() => {
@@ -14,14 +15,12 @@ function useRepoApis(repo, filteredApiNames) {
     const repoApis = REPO_API_MAP[shortName] || REPO_API_MAP[repo.name];
     if (!repoApis) return { aligned: [], fixing: [] };
 
-    const apiMap = new Map(APIS.map(a => [a.name, a]));
-
     const fixing = [];
     const aligned = [];
 
     repoApis.forEach(entry => {
       if (filteredApiNames && !filteredApiNames.has(entry.name)) return;
-      const api = apiMap.get(entry.name);
+      const api = API_MAP.get(entry.name);
       if (!api) return;
       if (entry.fixing) {
         fixing.push({

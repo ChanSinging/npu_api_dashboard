@@ -1,6 +1,7 @@
-import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useState, useMemo, useEffect, useCallback, lazy, Suspense } from 'react';
 import { APIS as APIS_DEFAULT, DIMENSIONS } from './data';
-import { HeroSection, DimSection, TrendSection, RepoSection, MatrixSection } from './sections';
+import { HeroSection, DimSection, TrendSection, RepoSection } from './sections';
+const MatrixSection = lazy(() => import('./sections/MatrixSection'));
 import Topbar from './components/Topbar';
 import FocusCard from './components/FocusCard';
 import TweaksPanel from './components/TweaksPanel';
@@ -176,7 +177,9 @@ export default function App() {
       <DimSection filtered={filtered} levelFilter={levelFilterProps} />
       <RepoSection onFocus={setFocus} levelFilter={levelFilterProps} filtered={filtered} />
       <TrendSection levelFilter={levelFilterProps} />
-      <MatrixSection filtered={filtered} onFocus={setFocus} levelFilter={levelFilterProps} />
+      <Suspense fallback={<div style={{ padding: 40, textAlign: 'center', color: 'var(--fg-3)', fontFamily: 'var(--font-mono)' }}>加载矩阵...</div>}>
+        <MatrixSection filtered={filtered} onFocus={setFocus} levelFilter={levelFilterProps} />
+      </Suspense>
       <FocusCard focus={focus} onClose={() => setFocus(null)} />
       <TweaksPanel tweaksOn={tweaksOn} tweaks={tweaks} setTweak={setTweak} />
       <ImportPanel open={importOn} onClose={() => setImportOn(false)} onImport={handleImport} />

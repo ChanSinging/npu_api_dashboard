@@ -19,19 +19,21 @@ const BLOCKING_APIS = [
 
 const PAGE_SIZE = 10;
 
-function computeFilteredRepos(filteredApiNames) {
-  const filteredNameSet = filteredApiNames;
+const REPO_APIS_INDEX = REPOS.map(repo => {
+  const shortName = repo.name.split('/').pop();
+  const repoApis = REPO_API_MAP[shortName] || REPO_API_MAP[repo.name];
+  return { repo, repoApis };
+});
 
-  return REPOS.map(repo => {
-    const shortName = repo.name.split('/').pop();
-    const repoApis = REPO_API_MAP[shortName] || REPO_API_MAP[repo.name];
+function computeFilteredRepos(filteredApiNames) {
+  return REPO_APIS_INDEX.map(({ repo, repoApis }) => {
     if (!repoApis) return { ...repo, apiUsed: 0, apiAligned: 0, missing: 0, rate: 0 };
 
     let apiUsed = 0;
     let apiAligned = 0;
 
     repoApis.forEach(entry => {
-      if (!filteredNameSet.has(entry.name)) return;
+      if (!filteredApiNames.has(entry.name)) return;
       apiUsed++;
       if (!entry.fixing) apiAligned++;
     });
@@ -39,13 +41,7 @@ function computeFilteredRepos(filteredApiNames) {
     const missing = apiUsed - apiAligned;
     const rate = apiUsed ? apiAligned / apiUsed : 0;
 
-    return {
-      ...repo,
-      apiUsed,
-      apiAligned,
-      missing,
-      rate,
-    };
+    return { ...repo, apiUsed, apiAligned, missing, rate };
   }).filter(r => r.apiUsed > 0);
 }
 
